@@ -51,6 +51,7 @@ public class Roulette : MonoBehaviour
 			buttons[selectedCell].SetChip(false, null);
 		}
 
+		print(i);
 		selectedCell = i;
 		buttons[i].SetChip(true, chips[selectedChip]);
 	}

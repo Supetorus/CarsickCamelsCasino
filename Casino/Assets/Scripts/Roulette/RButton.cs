@@ -25,12 +25,14 @@ public class RButton : MonoBehaviour
 			rect.sizeDelta = chipSize;
 			image.sprite = chip;
 			image.color = Color.white;
+			image.raycastPadding = new Vector4((size.x - chipSize.x) * -0.5f, (size.y - chipSize.y) * -0.5f, (size.x - chipSize.x) * -0.5f, (size.y - chipSize.y) * -0.5f);
 		}
 		else
 		{
 			rect.sizeDelta = size;
 			image.sprite = null;
 			image.color = Color.clear;
+			image.raycastPadding = Vector4.zero;
 		}
 	}
 }
