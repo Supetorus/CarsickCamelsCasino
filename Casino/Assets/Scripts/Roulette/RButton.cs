@@ -8,7 +8,6 @@ public class RButton : MonoBehaviour
 	static Vector2 chipSize = new Vector2(100, 100);
 	Vector2 size;
 	Image image;
-
 	RectTransform rect;
 
 	void Start()
