@@ -5,33 +5,35 @@ using UnityEngine;
 
 public class BlackjackManager : MonoBehaviour
 {
-	// All cards in a deck, these reference scripts on prefabs. To instantiate them do
+	/// <summary>
+    /// Prefabs for each card in a deck.
+    /// </summary>
 	public List<Card> cards = new List<Card>();
-    public Canvas canvas;
+    //public Canvas canvas; // unused
+    /// <summary>
+    /// The parent gameobject where player cards should be instantiated.
+    /// </summary>
     public GameObject playerHandLocation;
+    /// <summary>
+    /// The text display for the player's hand value.
+    /// </summary>
     public TMP_Text playerHandValue;
 
-    List<Card> deck = new List<Card>();
+    /// <summary>
+    /// A deck of prefab cards which have not been dealt.
+    /// </summary>
+    private List<Card> deck = new List<Card>();
     bool playerTurn = true;
 
     Card dealerHidden;
+    /// <summary>
+    /// The cards in the dealer's hand
+    /// </summary>
     List<Card> dealerHand = new List<Card>();
+    /// <summary>
+    /// The cards in the player's hand
+    /// </summary>
     List<Card> playerHand = new List<Card>();
-
-    void Start()
-    {
-        Card ace = new Card();
-        ace.value = Card.eValue.ACE;
-        playerHand.Add(ace);
-        playerHand.Add(ace);
-        playerHand.Add(ace);
-        print(CalculateHandValue(playerHand));
-    }
-
-    void Update()
-    {
-        
-    }
 
     public void Deal()
     {
@@ -53,6 +55,9 @@ public class BlackjackManager : MonoBehaviour
         DisplayPlayerCards();
     }
 
+    /// <summary>
+    /// Updates the player card display and value display
+    /// </summary>
     public void DisplayPlayerCards()
 	{
         playerHandValue.text = CalculateHandValue(playerHand).ToString();
@@ -61,6 +66,9 @@ public class BlackjackManager : MonoBehaviour
             Instantiate(card.gameObject, playerHandLocation.transform);
 	}
 
+    /// <summary>
+    /// Pops off the first card in the deck and returns it.
+    /// </summary>
     public Card GetCard()
     {
         Card card = deck[0];
@@ -68,24 +76,26 @@ public class BlackjackManager : MonoBehaviour
         return card;
     }
 
+    /// <summary>
+    /// Method called when player clicks "Hit" button.
+    /// </summary>
     public void HitPlayer()
 	{
-        if (playerHand.Count == 0) return; // button won't work until cards are dealt.
+        // button won't work if cards are not dealt or if player's hand is over 21
+        if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
         playerHand.Add(GetCard());
         DisplayPlayerCards();
 	}
 
-    public void HitDealer()
-	{
-
-	}
-
-    public int CalculateHandValue(List<Card> cards)
+    /// <summary>
+    /// Calculates and returns the value of the hand given. If ace as 11 puts the value over 21 then it is changed to 1.
+    /// </summary>
+    public int CalculateHandValue(List<Card> hand)
 	{
         int aces = 0;
         int result = 0;
 
-        foreach(Card card in cards)
+        foreach(Card card in hand)
 		{
 			switch (card.value)
 			{
@@ -111,11 +121,9 @@ public class BlackjackManager : MonoBehaviour
         return result;
 	}
 
-    public void Stay()
-    {
-        playerTurn = false;
-    }
-
+    /// <summary>
+    /// Resets the deck to a fresh full randomized deck.
+    /// </summary>
     public void Shuffle()
     {
         deck.Clear();
