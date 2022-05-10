@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BlackjackManager : MonoBehaviour
@@ -7,6 +8,9 @@ public class BlackjackManager : MonoBehaviour
 	// All cards in a deck, these reference scripts on prefabs. To instantiate them do
 	public List<Card> cards = new List<Card>();
     public Canvas canvas;
+    public GameObject playerHandLocation;
+    public TMP_Text playerHandValue;
+
     List<Card> deck = new List<Card>();
     bool playerTurn = true;
 
@@ -16,14 +20,12 @@ public class BlackjackManager : MonoBehaviour
 
     void Start()
     {
-        //GenerateCards();
-        Shuffle();
-        playerHand.Add(Hit());
-        dealerHidden = Hit();
-        playerHand.Add(Hit());
-        dealerHand.Add(Hit());
-
-        Instantiate(cards[0].gameObject, canvas.gameObject.transform);
+        Card ace = new Card();
+        ace.value = Card.eValue.ACE;
+        playerHand.Add(ace);
+        playerHand.Add(ace);
+        playerHand.Add(ace);
+        print(CalculateHandValue(playerHand));
     }
 
     void Update()
@@ -33,15 +35,81 @@ public class BlackjackManager : MonoBehaviour
 
     public void Deal()
     {
+        Shuffle();
+        playerHand.Clear();
+        dealerHand.Clear();
 
+        foreach(Transform card in playerHandLocation.transform)
+		{
+            Destroy(card.gameObject);
+		}
+
+        for(int i = 0; i < 2; i++)
+		{
+            playerHand.Add(GetCard());
+            dealerHand.Add(GetCard());
+		}
+
+        DisplayPlayerCards();
     }
 
-    public Card Hit()
+    public void DisplayPlayerCards()
+	{
+        playerHandValue.text = CalculateHandValue(playerHand).ToString();
+        foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
+        foreach (Card card in playerHand)
+            Instantiate(card.gameObject, playerHandLocation.transform);
+	}
+
+    public Card GetCard()
     {
         Card card = deck[0];
         deck.RemoveAt(0);
         return card;
     }
+
+    public void HitPlayer()
+	{
+        if (playerHand.Count == 0) return; // button won't work until cards are dealt.
+        playerHand.Add(GetCard());
+        DisplayPlayerCards();
+	}
+
+    public void HitDealer()
+	{
+
+	}
+
+    public int CalculateHandValue(List<Card> cards)
+	{
+        int aces = 0;
+        int result = 0;
+
+        foreach(Card card in cards)
+		{
+			switch (card.value)
+			{
+				case Card.eValue.ACE:
+                    aces++;
+                    result += 11;
+                    break;
+				case Card.eValue.JACK:
+				case Card.eValue.QUEEN:
+				case Card.eValue.KING:
+                    result += 10;
+					break;
+				default:
+                    result += (int)card.value + 1;
+                    break;
+			}
+		}
+        for (;aces > 0 && result > 21; aces--)
+		{
+            result -= 10;
+		}
+
+        return result;
+	}
 
     public void Stay()
     {
