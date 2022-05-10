@@ -17,6 +17,15 @@ struct Bet
 
 public class Roulette : MonoBehaviour
 {
+	/* TODO:
+	 * Chip highlighting
+	 * Multiple bets
+	 * Display total bet amount
+	 * 'Roll' for a number
+	 * Display rolled number
+	 * Use bank system
+	 */
+
 	[SerializeField] Sprite[] chips;
 	[SerializeField] GameObject chipPanel;
 	RButton[] buttons;
@@ -207,6 +216,7 @@ public class Roulette : MonoBehaviour
 
 	public void SetChip(int i)
 	{
+		//TODO: Highlighting
 		selectedChip = i;
 	}
 
