@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlackjackManager : MonoBehaviour
 {
@@ -18,6 +19,15 @@ public class BlackjackManager : MonoBehaviour
     /// The text display for the player's hand value.
     /// </summary>
     public TMP_Text playerHandValue;
+    /// <summary>
+    /// The parent gameobject where dealer cards should be instantiated.
+    /// </summary>
+    public GameObject dealerHandLocation;
+
+    /// <summary>
+    /// The sprite shown for a card that is face down.
+    /// </summary>
+    public Sprite faceDownCard;
 
     /// <summary>
     /// A deck of prefab cards which have not been dealt.
@@ -35,6 +45,9 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     List<Card> playerHand = new List<Card>();
 
+    /// <summary>
+    /// Shuffles the deck and deals two cards to player and dealer. Dealer has one card face down.
+    /// </summary>
     public void Deal()
     {
         Shuffle();
@@ -52,18 +65,26 @@ public class BlackjackManager : MonoBehaviour
             dealerHand.Add(GetCard());
 		}
 
-        DisplayPlayerCards();
+        dealerHand[0].isFaceUp = false;
+
+        DisplayCards();
     }
 
     /// <summary>
-    /// Updates the player card display and value display
+    /// Updates the card displays and value display
     /// </summary>
-    public void DisplayPlayerCards()
+    public void DisplayCards()
 	{
         playerHandValue.text = CalculateHandValue(playerHand).ToString();
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
-        foreach (Card card in playerHand)
-            Instantiate(card.gameObject, playerHandLocation.transform);
+        foreach (Transform c in dealerHandLocation.transform) Destroy(c.gameObject);
+        foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
+        foreach (Card c in dealerHand)
+        {
+            Card newCard = Instantiate(c.gameObject, dealerHandLocation.transform).GetComponent<Card>();
+            if (newCard.isFaceUp) newCard.GetComponent<Image>().sprite = newCard.defaultSprite;
+            else newCard.GetComponent<Image>().sprite = faceDownCard;
+        }
 	}
 
     /// <summary>
@@ -84,11 +105,13 @@ public class BlackjackManager : MonoBehaviour
         // button won't work if cards are not dealt or if player's hand is over 21
         if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
         playerHand.Add(GetCard());
-        DisplayPlayerCards();
+        DisplayCards();
 	}
 
     /// <summary>
-    /// Calculates and returns the value of the hand given. If ace as 11 puts the value over 21 then it is changed to 1.
+    /// Calculates and returns the value of the hand given. If ace as 11 puts the value
+    /// over 21 then it is changed to 1.
+    /// If card is face down it is skipped.
     /// </summary>
     public int CalculateHandValue(List<Card> hand)
 	{
@@ -97,6 +120,7 @@ public class BlackjackManager : MonoBehaviour
 
         foreach(Card card in hand)
 		{
+            if (!card.isFaceUp) continue;
 			switch (card.value)
 			{
 				case Card.eValue.ACE:
@@ -133,6 +157,7 @@ public class BlackjackManager : MonoBehaviour
         for (int i = 0; i < cards.Count; i++)
         {
             Card card = tempCards[Random.Range(0, tempCards.Count)];
+            card.isFaceUp = true;
             deck.Add(card);
             tempCards.Remove(card);
         }

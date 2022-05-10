@@ -32,9 +32,7 @@ public class Card : MonoBehaviour
     public eSuit suit = eSuit.SPADES;
     public eValue value = eValue.ACE;
 
-    //public Card(eSuit suit, eValue value)
-    //{
-    //    this.suit = suit;
-    //    this.value = value;
-    //}
+    public bool isFaceUp = true;
+
+    public Sprite defaultSprite;
 }

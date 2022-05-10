@@ -91,3 +91,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   suit: 1
   value: 10
+  isFaceUp: 1
+  defaultSprite: {fileID: 21300000, guid: cec3f61a65e3e6d44b5ea702cbb5fb9b, type: 3}
