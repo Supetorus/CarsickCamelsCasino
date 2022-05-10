@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class BlackjackManager : MonoBehaviour
 {
+    public TMP_Text playerBetValue;
+
 	/// <summary>
     /// Prefabs for each card in a deck.
     /// </summary>
@@ -36,11 +38,12 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     public Sprite faceDownCard;
 
+    private int playerBet = 0;
+
     /// <summary>
     /// A deck of prefab cards which have not been dealt.
     /// </summary>
     private List<Card> deck = new List<Card>();
-    bool playerTurn = true;
 
     /// <summary>
     /// The cards in the dealer's hand
@@ -81,6 +84,11 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     public void Display()
 	{
+
+        playerBetValue.text = playerBet.ToString();
+
+        if (playerHand.Count < 0) return;
+
         int playerHandValued = CalculateHandValue(playerHand);
         playerHandValue.text = playerHandValued.ToString();
 
@@ -190,6 +198,12 @@ public class BlackjackManager : MonoBehaviour
             tempCards.Remove(card);
         }
     }
+
+    public void AddBet(int bet)
+	{
+        playerBet += bet;
+        Display();
+	}
 
     public void DealerPlay()
 	{
