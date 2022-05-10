@@ -66,16 +66,20 @@ public class BlackjackManager : MonoBehaviour
 		}
 
         dealerHand[0].isFaceUp = false;
-
-        DisplayCards();
+        Display();
     }
 
     /// <summary>
     /// Updates the card displays and value display
     /// </summary>
-    public void DisplayCards()
+    public void Display()
 	{
-        playerHandValue.text = CalculateHandValue(playerHand).ToString();
+        int playerHandValued = CalculateHandValue(playerHand);
+        playerHandValue.text = playerHandValued.ToString();
+        if (playerHandValued > 21) playerHandValue.color = Color.red;
+        else playerHandValue.color = Color.white;
+
+
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
         foreach (Transform c in dealerHandLocation.transform) Destroy(c.gameObject);
         foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
@@ -100,13 +104,24 @@ public class BlackjackManager : MonoBehaviour
     /// <summary>
     /// Method called when player clicks "Hit" button.
     /// </summary>
-    public void HitPlayer()
+    public void PlayerHit()
 	{
         // button won't work if cards are not dealt or if player's hand is over 21
         if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
         playerHand.Add(GetCard());
-        DisplayCards();
+        DealerPlay();
+        Display();
 	}
+
+    /// <summary>
+    /// The method called when player clicks "Stand" button.
+    /// </summary>
+    public void PlayerStand()
+	{
+        //
+        DealerPlay();
+        Display();
+    }
 
     /// <summary>
     /// Calculates and returns the value of the hand given. If ace as 11 puts the value
@@ -162,6 +177,11 @@ public class BlackjackManager : MonoBehaviour
             tempCards.Remove(card);
         }
     }
+
+    public void DealerPlay()
+	{
+
+	}
 
     //private void GenerateCards()
     //{
