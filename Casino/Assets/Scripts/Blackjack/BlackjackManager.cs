@@ -10,15 +10,22 @@ public class BlackjackManager : MonoBehaviour
     /// Prefabs for each card in a deck.
     /// </summary>
 	public List<Card> cards = new List<Card>();
-    //public Canvas canvas; // unused
+
     /// <summary>
     /// The parent gameobject where player cards should be instantiated.
     /// </summary>
     public GameObject playerHandLocation;
+
     /// <summary>
     /// The text display for the player's hand value.
     /// </summary>
     public TMP_Text playerHandValue;
+
+    /// <summary>
+    /// The text display for the dealer's hand value.
+    /// </summary>
+    public TMP_Text dealerHandValue;
+
     /// <summary>
     /// The parent gameobject where dealer cards should be instantiated.
     /// </summary>
@@ -35,11 +42,11 @@ public class BlackjackManager : MonoBehaviour
     private List<Card> deck = new List<Card>();
     bool playerTurn = true;
 
-    Card dealerHidden;
     /// <summary>
     /// The cards in the dealer's hand
     /// </summary>
     List<Card> dealerHand = new List<Card>();
+
     /// <summary>
     /// The cards in the player's hand
     /// </summary>
@@ -76,9 +83,17 @@ public class BlackjackManager : MonoBehaviour
 	{
         int playerHandValued = CalculateHandValue(playerHand);
         playerHandValue.text = playerHandValued.ToString();
-        if (playerHandValued > 21) playerHandValue.color = Color.red;
+
+        if (playerHandValued == 21) playerHandValue.color = Color.green;
+        else if (playerHandValued > 21) playerHandValue.color = Color.red;
         else playerHandValue.color = Color.white;
 
+        int dealerHandValued = CalculateHandValue(dealerHand);
+        dealerHandValue.text = dealerHandValued == 0 ? "" : dealerHandValued.ToString();
+
+        if (dealerHandValued == 21) dealerHandValue.color = Color.green;
+        else if (dealerHandValued > 21) dealerHandValue.color = Color.red;
+        else dealerHandValue.color = Color.white;
 
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
         foreach (Transform c in dealerHandLocation.transform) Destroy(c.gameObject);
@@ -109,7 +124,7 @@ public class BlackjackManager : MonoBehaviour
         // button won't work if cards are not dealt or if player's hand is over 21
         if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
         playerHand.Add(GetCard());
-        DealerPlay();
+        if (CalculateHandValue(playerHand) > 21) DealerPlay();
         Display();
 	}
 
@@ -118,9 +133,7 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     public void PlayerStand()
 	{
-        //
         DealerPlay();
-        Display();
     }
 
     /// <summary>
@@ -180,7 +193,12 @@ public class BlackjackManager : MonoBehaviour
 
     public void DealerPlay()
 	{
-
+        dealerHand[0].isFaceUp = true;
+        while (CalculateHandValue(dealerHand) < 17)
+		{
+            dealerHand.Add(GetCard());
+		}
+        Display();
 	}
 
     //private void GenerateCards()
