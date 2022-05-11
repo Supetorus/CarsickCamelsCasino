@@ -13,6 +13,8 @@ struct Bet
 
 	public readonly int multiplier;
 	public readonly int[] numbers;
+
+	
 }
 
 public class Roulette : MonoBehaviour
@@ -33,6 +35,8 @@ public class Roulette : MonoBehaviour
 	private int selectedChip = 0;
 	private int selectedCell = -1;
 	private bool needsLayout = true;
+
+	public int Roll = 0;
 
 	private readonly int[] betAmts = { 1, 5, 10, 20, 50, 100, 500, 1000, 5000 };
 
@@ -242,6 +246,40 @@ public class Roulette : MonoBehaviour
 
 	public void Spin()
 	{
+		Roll = Random.Range(0, 36);
+
+		// if roll = any number in a bet
+		// payout 
+
+		foreach(var item in bets[selectedCell].numbers)
+        {
+			if(Roll == item)
+            {
+				int betWin = betMultiplier[bets[selectedCell].multiplier] * betAmts[selectedChip];
+				playerInfo.chipBalance += betWin;
+				// DisplayWin(betWin);
+
+            }
+        }
+		
+
+		/*
+		Red/Black - 1:1
+		Odd / Even - 1:1
+		High / Low - 1:1
+		Dozen - 3:1
+		Column - 3:1
+		Square Number(4 - Number) -9:1
+		Split Number(2 - Number) -18:1
+		Straight Number(1 - Number) -36:1
+		*/
 
 	}
+	
+	public void DisplayWin(int win)
+    {
+
+    }
+
+
 }
