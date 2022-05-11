@@ -278,7 +278,8 @@ public class BlackjackManager : MonoBehaviour
         while (dealerScore < 17 || dealerScore < playerScore)
 		{
             dealerHand.Add(GetCard());
-		}
+            dealerScore = CalculateHandValue(dealerHand);
+        }
 
         StartCoroutine(GameOver());
 	}
