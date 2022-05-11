@@ -17,6 +17,16 @@ struct Bet
 
 public class Roulette : MonoBehaviour
 {
+	/* TODO:
+	 * Chip highlighting
+	 * Multiple bets
+	 * Display total bet amount
+	 * 'Roll' for a number
+	 * Display rolled number
+	 * Use bank system
+	 */
+
+	[SerializeField] PlayerInfo playerInfo;
 	[SerializeField] Sprite[] chips;
 	[SerializeField] GameObject chipPanel;
 	RButton[] buttons;
@@ -180,7 +190,10 @@ public class Roulette : MonoBehaviour
 		new Bet(5, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36), //147
 		new Bet(5, 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35),
 		new Bet(5, 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34),
-		new Bet(0, 0) //150
+		new Bet(0, 0), //150
+		new Bet(2, 0, 2, 3),
+		new Bet(2, 0, 1, 2),
+		new Bet(3, 0, 1, 2, 3),
 	};
 
 	void Awake()
@@ -204,11 +217,14 @@ public class Roulette : MonoBehaviour
 
 	public void SetChip(int i)
 	{
+		//TODO: Highlighting
 		selectedChip = i;
 	}
 
 	public void ClickCell(int i)
 	{
+		//TODO: Multiple bets
+
 		if(needsLayout)
 		{
 			GetComponentInChildren<GridLayoutGroup>().enabled = false;
@@ -222,5 +238,10 @@ public class Roulette : MonoBehaviour
 
 		selectedCell = i;
 		buttons[i].SetChip(true, chips[selectedChip]);
+	}
+
+	public void Spin()
+	{
+
 	}
 }

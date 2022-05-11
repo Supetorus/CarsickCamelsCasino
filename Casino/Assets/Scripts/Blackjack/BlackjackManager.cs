@@ -281,7 +281,9 @@ public class BlackjackManager : MonoBehaviour
 	{
         gameState = GameState.GameOver;
         dealerHand[0].isFaceUp = true;
-        while (CalculateHandValue(dealerHand) < 17)
+        int playerScore = CalculateHandValue(playerHand);
+        int dealerScore = CalculateHandValue(dealerHand);
+        while (dealerScore < 17 || dealerScore < playerScore)
 		{
             dealerHand.Add(GetCard());
 		}
