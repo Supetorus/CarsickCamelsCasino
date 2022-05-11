@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class BlackjackManager : MonoBehaviour
 {
+    public PlayerInfo playerInfo;
+
+    public TMP_Text playerAvailableChips;
+
+    public TMP_Text playerAvailableBalance;
+
     public TMP_Text playerBetValue;
 
 	/// <summary>
@@ -21,12 +27,12 @@ public class BlackjackManager : MonoBehaviour
     /// <summary>
     /// The text display for the player's hand value.
     /// </summary>
-    public TMP_Text playerHandValue;
+    public TMP_Text playerHandText;
 
     /// <summary>
     /// The text display for the dealer's hand value.
     /// </summary>
-    public TMP_Text dealerHandValue;
+    public TMP_Text dealerHandText;
 
     /// <summary>
     /// The parent gameobject where dealer cards should be instantiated.
@@ -37,6 +43,8 @@ public class BlackjackManager : MonoBehaviour
     /// The sprite shown for a card that is face down.
     /// </summary>
     public Sprite faceDownCard;
+
+    public GameObject gameEndPanel;
 
     private int playerBet = 0;
 
@@ -55,11 +63,31 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     List<Card> playerHand = new List<Card>();
 
-    /// <summary>
-    /// Shuffles the deck and deals two cards to player and dealer. Dealer has one card face down.
-    /// </summary>
-    public void Deal()
+    private enum GameState
+	{
+        Betting,
+        Playing,
+        GameOver,
+	}
+
+    private GameState gameState;
+
+	private void Start()
+	{
+        playerAvailableChips.text = playerInfo.chipBalance.ToString();
+        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
+
+        gameState = GameState.Betting;
+        gameEndPanel.SetActive(false);
+	}
+
+	/// <summary>
+	/// Called by deal button. Shuffles the deck and deals two cards to player and dealer. Dealer has one card face down.
+	/// </summary>
+	public void Deal()
     {
+        if (gameState != GameState.Betting) return;
+        gameState = GameState.Playing;
         Shuffle();
         playerHand.Clear();
         dealerHand.Clear();
@@ -76,32 +104,32 @@ public class BlackjackManager : MonoBehaviour
 		}
 
         dealerHand[0].isFaceUp = false;
-        Display();
+
+        CheckBlackjack();
+
+        DisplayCards();
     }
 
     /// <summary>
     /// Updates the card displays and value display
     /// </summary>
-    public void Display()
+    public void DisplayCards()
 	{
-
-        playerBetValue.text = playerBet.ToString();
-
         if (playerHand.Count < 0) return;
 
         int playerHandValued = CalculateHandValue(playerHand);
-        playerHandValue.text = playerHandValued.ToString();
+        playerHandText.text = playerHandValued.ToString();
 
-        if (playerHandValued == 21) playerHandValue.color = Color.green;
-        else if (playerHandValued > 21) playerHandValue.color = Color.red;
-        else playerHandValue.color = Color.white;
+        if (playerHandValued == 21) playerHandText.color = Color.green;
+        else if (playerHandValued > 21) playerHandText.color = Color.red;
+        else playerHandText.color = Color.white;
 
         int dealerHandValued = CalculateHandValue(dealerHand);
-        dealerHandValue.text = dealerHandValued == 0 ? "" : dealerHandValued.ToString();
+        dealerHandText.text = dealerHandValued == 0 ? "" : dealerHandValued.ToString();
 
-        if (dealerHandValued == 21) dealerHandValue.color = Color.green;
-        else if (dealerHandValued > 21) dealerHandValue.color = Color.red;
-        else dealerHandValue.color = Color.white;
+        if (dealerHandValued == 21) dealerHandText.color = Color.green;
+        else if (dealerHandValued > 21) dealerHandText.color = Color.red;
+        else dealerHandText.color = Color.white;
 
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
         foreach (Transform c in dealerHandLocation.transform) Destroy(c.gameObject);
@@ -113,6 +141,15 @@ public class BlackjackManager : MonoBehaviour
             else newCard.GetComponent<Image>().sprite = faceDownCard;
         }
 	}
+
+    /// <summary>
+    /// Updates the chips displays.
+    /// </summary>
+    public void DisplayChips()
+	{
+        playerBetValue.text = playerBet.ToString();
+        playerAvailableChips.text = playerInfo.chipBalance.ToString();
+    }
 
     /// <summary>
     /// Pops off the first card in the deck and returns it.
@@ -129,18 +166,40 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     public void PlayerHit()
 	{
-        // button won't work if cards are not dealt or if player's hand is over 21
-        if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
+        if (gameState != GameState.Playing) return;
+
         playerHand.Add(GetCard());
-        if (CalculateHandValue(playerHand) > 21) DealerPlay();
-        Display();
+        if (CalculateHandValue(playerHand) > 21) StartCoroutine(GameOver());
+        CheckBlackjack();
+        DisplayCards();
 	}
 
-    /// <summary>
-    /// The method called when player clicks "Stand" button.
-    /// </summary>
-    public void PlayerStand()
+    private void CheckBlackjack()
 	{
+        if (CalculateHandValue(playerHand) == 21)
+		{
+            StartCoroutine(GameOver());
+		}
+	}
+
+	public void Reset()
+	{
+        playerHand.Clear();
+        dealerHand.Clear();
+        playerBet = 0;
+
+        DisplayCards();
+        DisplayChips();
+        gameState = GameState.Betting;
+	}
+
+	/// <summary>
+	/// The method called when player clicks "Stand" button.
+	/// </summary>
+	public void PlayerStand()
+	{
+        if (gameState != GameState.Playing) return;
+
         DealerPlay();
     }
 
@@ -201,31 +260,50 @@ public class BlackjackManager : MonoBehaviour
 
     public void AddBet(int bet)
 	{
-        playerBet += bet;
-        Display();
+        if (gameState != GameState.Betting) return;
+        if (playerInfo.chipBalance > bet)
+		{
+            playerBet += bet;
+            playerInfo.chipBalance -= bet;
+            DisplayChips();
+		}
 	}
 
     public void DealerPlay()
 	{
+        gameState = GameState.GameOver;
         dealerHand[0].isFaceUp = true;
-        while (CalculateHandValue(dealerHand) < 17)
+        int playerScore = CalculateHandValue(playerHand);
+        int dealerScore = CalculateHandValue(dealerHand);
+        while (dealerScore < 17 || dealerScore < playerScore)
 		{
             dealerHand.Add(GetCard());
 		}
-        Display();
+
+        StartCoroutine(GameOver());
 	}
 
-    //private void GenerateCards()
-    //{
-    //    List<Card.eValue> values = new List<Card.eValue>() { Card.eValue.ACE, Card.eValue.TWO, Card.eValue.THREE, Card.eValue.FOUR, Card.eValue.FIVE, Card.eValue.SIX, Card.eValue.SEVEN, Card.eValue.EIGHT, Card.eValue.NINE, Card.eValue.TEN, Card.eValue.JACK, Card.eValue.QUEEN, Card.eValue.KING };
-    //    List<Card.eSuit> suits = new List<Card.eSuit>() { Card.eSuit.HEARTS, Card.eSuit.SPADES, Card.eSuit.DIAMONDS, Card.eSuit.CLOVERS };
+    private IEnumerator GameOver()
+	{
+        int playerScore = CalculateHandValue(playerHand);
+        int dealerScore = CalculateHandValue(dealerHand);
 
-    //    for (int i = 0; i < values.Count; i++)
-    //    {
-    //        for (int j = 0; j < suits.Count; j++)
-    //        {
-    //            cards.Add(new Card(suits[j], values[i]));
-    //        }
-    //    }
-    //}
+        if (playerScore == 21 && dealerScore != 21)
+		{
+            playerInfo.chipBalance += playerBet * 3;
+		}
+        if (playerScore > dealerScore && playerScore <= 21)
+        {
+            playerInfo.chipBalance += playerBet * 2;
+        }
+        else if (playerScore == dealerScore && playerScore <= 21)
+        {
+            playerInfo.chipBalance += playerBet;
+        }
+        DisplayCards();
+
+        yield return new WaitForSeconds(2);
+
+        gameEndPanel.SetActive(true);
+	}
 }

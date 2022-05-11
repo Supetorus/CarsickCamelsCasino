@@ -246,6 +246,7 @@ public class Roulette : MonoBehaviour
 
 	public void Spin()
 	{
+
 		Roll = Random.Range(0, 36);
 
 		// if roll = any number in a bet
@@ -273,6 +274,7 @@ public class Roulette : MonoBehaviour
 		Split Number(2 - Number) -18:1
 		Straight Number(1 - Number) -36:1
 		*/
+
 
 	}
 	
