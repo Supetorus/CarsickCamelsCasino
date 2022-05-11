@@ -293,7 +293,11 @@ public class BlackjackManager : MonoBehaviour
 		{
             playerInfo.chipBalance += playerBet * 3;
 		}
-        if (playerScore > dealerScore && playerScore <= 21)
+        else if (playerScore < dealerScore && dealerScore > 21)
+        {
+            playerInfo.chipBalance += playerBet * 2;
+        }
+        else if (playerScore > dealerScore && playerScore < 21)
         {
             playerInfo.chipBalance += playerBet * 2;
         }
@@ -302,6 +306,7 @@ public class BlackjackManager : MonoBehaviour
             playerInfo.chipBalance += playerBet;
         }
         DisplayCards();
+        DisplayChips();
 
         yield return new WaitForSeconds(2);
 
