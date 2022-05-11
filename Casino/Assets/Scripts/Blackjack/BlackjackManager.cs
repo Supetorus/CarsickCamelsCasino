@@ -132,7 +132,7 @@ public class BlackjackManager : MonoBehaviour
         // button won't work if cards are not dealt or if player's hand is over 21
         if (playerHand.Count == 0 || CalculateHandValue(playerHand) > 21) return; 
         playerHand.Add(GetCard());
-        if (CalculateHandValue(playerHand) > 21) DealerPlay();
+        //if (CalculateHandValue(playerHand) > 21) player loses immediately;
         Display();
 	}
 
@@ -208,7 +208,9 @@ public class BlackjackManager : MonoBehaviour
     public void DealerPlay()
 	{
         dealerHand[0].isFaceUp = true;
-        while (CalculateHandValue(dealerHand) < 17)
+        int playerScore = CalculateHandValue(playerHand);
+        int dealerScore = CalculateHandValue(dealerHand);
+        while (dealerScore < 17 || dealerScore < playerScore)
 		{
             dealerHand.Add(GetCard());
 		}
