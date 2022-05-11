@@ -184,16 +184,8 @@ public class BlackjackManager : MonoBehaviour
 
 	public void Reset()
 	{
-        for (int i = 0; i < playerHandLocation.transform.childCount; i++)
-        {
-            Destroy(playerHandLocation.transform.GetChild(i).gameObject);
-            print("Destroying: " + playerHandLocation.transform.GetChild(i).gameObject.name);
-        }
-        for (int i = 0; i < dealerHandLocation.transform.childCount; i++)
-        {
-            Destroy(dealerHandLocation.transform.GetChild(i).gameObject);
-            print("Destroying: " + dealerHandLocation.transform.GetChild(i).gameObject.name);
-        }
+        playerHand.Clear();
+        dealerHand.Clear();
         playerBet = 0;
 
         DisplayCards();
