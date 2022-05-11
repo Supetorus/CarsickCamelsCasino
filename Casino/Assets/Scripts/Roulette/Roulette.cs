@@ -26,6 +26,7 @@ public class Roulette : MonoBehaviour
 	 * Use bank system
 	 */
 
+	[SerializeField] PlayerInfo playerInfo;
 	[SerializeField] Sprite[] chips;
 	[SerializeField] GameObject chipPanel;
 	RButton[] buttons;
@@ -237,5 +238,10 @@ public class Roulette : MonoBehaviour
 
 		selectedCell = i;
 		buttons[i].SetChip(true, chips[selectedChip]);
+	}
+
+	public void Spin()
+	{
+
 	}
 }
