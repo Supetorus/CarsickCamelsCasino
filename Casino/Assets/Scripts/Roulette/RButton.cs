@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class RButton : MonoBehaviour
 {
 	static Vector2 chipSize = new Vector2(100, 100);
-	Vector2 size;
+	Vector2 size = Vector2.zero;
 	Image image;
 	RectTransform rect;
+	public int chip = -1;
 
 	void Start()
 	{
@@ -20,7 +21,7 @@ public class RButton : MonoBehaviour
 	{
 		if(set)
 		{
-			size = rect.sizeDelta;
+			if (size == Vector2.zero) { size = rect.sizeDelta; }
 			rect.sizeDelta = chipSize;
 			image.sprite = chip;
 			image.color = Color.white;

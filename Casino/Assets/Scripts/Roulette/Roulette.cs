@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using TMPro;
 
 struct Bet
 {
@@ -13,34 +15,31 @@ struct Bet
 
 	public readonly int multiplier;
 	public readonly int[] numbers;
-
-	
 }
 
 public class Roulette : MonoBehaviour
 {
-	/* TODO:
-	 * Chip highlighting
-	 * Multiple bets
-	 * Display total bet amount
-	 * 'Roll' for a number
-	 * Display rolled number
-	 * Use bank system
-	 */
-
+	[SerializeField] TMP_Text playerMoney;
+	[SerializeField] TMP_Text totalBetText;
+	[SerializeField] TMP_Text payoutText;
+	[SerializeField] GameObject rollImage;
+	[SerializeField] GameObject highlight;
 	[SerializeField] PlayerInfo playerInfo;
 	[SerializeField] Sprite[] chips;
+	[SerializeField] Sprite[] colors;
 	[SerializeField] GameObject chipPanel;
 	RButton[] buttons;
 	private int selectedChip = 0;
-	private int selectedCell = -1;
+	private List<int> selectedCells = new List<int>();
 	private bool needsLayout = true;
-
-	public int Roll = 0;
+	private int roll;
+	private int totalBet = 0;
 
 	private readonly int[] betAmts = { 1, 5, 10, 20, 50, 100, 500, 1000, 5000 };
 
-	private readonly int[] betMultiplier = { 35, 17, 11, 8, 5, 2, 1 };
+	private readonly int[] betMultiplier = { 36, 18, 12, 9, 6, 3, 2 };
+
+	private readonly int[] blackNumbers = { 2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35 };
 
 	private readonly Bet[] bets =
 	{
@@ -205,83 +204,89 @@ public class Roulette : MonoBehaviour
 		buttons = GetComponentsInChildren<RButton>();
 
 		int c = 0;
-		foreach(var chip in chipPanel.GetComponentsInChildren<Button>())
+		foreach (var chip in chipPanel.GetComponentsInChildren<Button>())
 		{
 			int temp = c;
 			chip.onClick.AddListener(() => SetChip(temp));
 			++c;
 		}
 
-		for(int i = 0; i < buttons.Length; ++i)
+		for (int i = 0; i < buttons.Length; ++i)
 		{
 			int temp = i;
 			buttons[i].GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() => ClickCell(temp));
 		}
+
+		playerMoney.text = "Chips: $" + playerInfo.chipBalance;
 	}
 
 	public void SetChip(int i)
 	{
-		//TODO: Highlighting
+		highlight.SetActive(true);
 		selectedChip = i;
+		highlight.transform.position = chipPanel.transform.GetChild(i).transform.position;
 	}
 
 	public void ClickCell(int i)
 	{
-		//TODO: Multiple bets
-
-		if(needsLayout)
+		if (needsLayout)
 		{
 			GetComponentInChildren<GridLayoutGroup>().enabled = false;
 			needsLayout = false;
 		}
 
-		if(selectedCell > -1)
+		//TODO: Don't allow player to go negative
+
+		if (selectedCells.Contains(i) && buttons[i].chip == selectedChip)
 		{
-			buttons[selectedCell].SetChip(false, null);
+			buttons[i].SetChip(false, null);
+			buttons[i].chip = -1;
+			totalBet -= betAmts[selectedChip];
+			selectedCells.Remove(i);
+		}
+		else
+		{
+			buttons[i].SetChip(true, chips[selectedChip]);
+			if (buttons[i].chip > -1) { totalBet -= betAmts[buttons[i].chip]; }
+			buttons[i].chip = selectedChip;
+			totalBet += betAmts[selectedChip];
+			selectedCells.Remove(i);
+			selectedCells.Add(i);
 		}
 
-		selectedCell = i;
-		buttons[i].SetChip(true, chips[selectedChip]);
+		totalBetText.text = "Total Bet: $" +  totalBet;
 	}
 
 	public void Spin()
 	{
+		if (selectedCells.Count > 0)
+		{
+			playerInfo.chipBalance -= totalBet;
+			playerMoney.text = "Chips: $" + playerInfo.chipBalance;
 
-		Roll = Random.Range(0, 36);
+			//TODO: Wait for roll
 
-		// if roll = any number in a bet
-		// payout 
+			roll = Random.Range(0, 37);
+			rollImage.SetActive(true);
+			rollImage.GetComponentInChildren<TMP_Text>().text = roll.ToString();
+			if (roll == 0) { rollImage.GetComponent<Image>().sprite = colors[2]; }
+			else if (blackNumbers.Contains(roll)) { rollImage.GetComponent<Image>().sprite = colors[0]; }
+			else { rollImage.GetComponent<Image>().sprite = colors[1]; }
 
-		foreach(var item in bets[selectedCell].numbers)
-        {
-			if(Roll == item)
-            {
-				int betWin = betMultiplier[bets[selectedCell].multiplier] * betAmts[selectedChip];
-				playerInfo.chipBalance += betWin;
-				// DisplayWin(betWin);
+			int payout = 0;
 
-            }
-        }
-		
+			foreach (int cell in selectedCells)
+			{
+				if (bets[cell].numbers.Contains(roll))
+				{
+					payout += betMultiplier[bets[cell].multiplier] * betAmts[buttons[cell].chip];
+					playerInfo.chipBalance += payout;
+				}
+			}
 
-		/*
-		Red/Black - 1:1
-		Odd / Even - 1:1
-		High / Low - 1:1
-		Dozen - 3:1
-		Column - 3:1
-		Square Number(4 - Number) -9:1
-		Split Number(2 - Number) -18:1
-		Straight Number(1 - Number) -36:1
-		*/
-
-
+			payoutText.gameObject.SetActive(true);
+			payoutText.text = "Payout: $" + payout;
+			playerMoney.text = "Chips: $" + playerInfo.chipBalance;
+		}
 	}
-	
-	public void DisplayWin(int win)
-    {
-
-    }
-
-
 }
