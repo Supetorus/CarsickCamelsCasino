@@ -288,25 +288,27 @@ public class BlackjackManager : MonoBehaviour
 
     private IEnumerator GameOver()
 	{
-        int playerScore = CalculateHandValue(playerHand);
-        int dealerScore = CalculateHandValue(dealerHand);
+        //int playerScore = CalculateHandValue(playerHand);
+        //int dealerScore = CalculateHandValue(dealerHand);
 
-        if (playerScore == 21 && dealerScore != 21)
+        int playerScore = 1;
+        int dealerScore = 1;
+
+        if (playerScore == 21) // player has 21
 		{
-            playerInfo.chipBalance += playerBet * 3;
+            if (dealerScore == 21) playerInfo.chipBalance += playerBet;
+            else playerInfo.chipBalance += playerBet * 3;
 		}
-        else if (playerScore < dealerScore && dealerScore > 21)
-        {
+        else if (dealerScore > 21)
+		{
             playerInfo.chipBalance += playerBet * 2;
-        }
-        else if (playerScore > dealerScore && playerScore < 21)
-        {
-            playerInfo.chipBalance += playerBet * 2;
-        }
-        else if (playerScore == dealerScore && playerScore <= 21)
-        {
-            playerInfo.chipBalance += playerBet;
-        }
+		}
+        else if (dealerScore < 21 && playerScore < 21)
+		{
+            if (playerScore > dealerScore) playerInfo.chipBalance += playerBet * 2;
+            else if (dealerScore == playerScore) playerInfo.chipBalance += playerBet;
+		}
+
         DisplayCards();
         DisplayChips();
 
