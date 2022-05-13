@@ -46,6 +46,8 @@ public class BlackjackManager : MonoBehaviour
 
     public GameObject gameEndPanel;
 
+    public int minBet = 2;
+
     private int playerBet = 0;
 
     /// <summary>
@@ -86,7 +88,7 @@ public class BlackjackManager : MonoBehaviour
 	/// </summary>
 	public void Deal()
     {
-        if (gameState != GameState.Betting) return;
+        if (gameState != GameState.Betting || playerBet < minBet) return;
         gameState = GameState.Playing;
         Shuffle();
         playerHand.Clear();
@@ -260,7 +262,7 @@ public class BlackjackManager : MonoBehaviour
 
     public void AddBet(int bet)
 	{
-        if (gameState != GameState.Betting) return;
+        if (gameState != GameState.Betting || playerInfo.chipBalance < bet) return;
         if (playerInfo.chipBalance > bet)
 		{
             playerBet += bet;
