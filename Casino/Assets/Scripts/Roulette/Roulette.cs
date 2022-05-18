@@ -203,7 +203,7 @@ public class Roulette : MonoBehaviour
 	{
 		buttons = GetComponentsInChildren<RButton>();
 
-		payoutText.Display("You have won 10 chips!");
+		
 
 		int c = 0;
 		foreach (var chip in chipPanel.GetComponentsInChildren<Button>())
