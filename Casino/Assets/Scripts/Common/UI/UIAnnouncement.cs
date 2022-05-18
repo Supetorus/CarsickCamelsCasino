@@ -7,13 +7,14 @@ public class UIAnnouncement : MonoBehaviour
 {
     [SerializeField] TMP_Text label;
     [SerializeField] float waitTimer = 0;
+    float timer = 0;
 
     public void Display(string text)
     {
         label.text = text;
         Color color = label.color;
         color.a = 1;
-        waitTimer = 1;
+        timer = waitTimer;
         label.color = color;
 
     }
@@ -24,9 +25,9 @@ public class UIAnnouncement : MonoBehaviour
 
         if ( color.a  >  0)
         {
-            if (waitTimer > 0)
+            if (timer > 0)
             {
-                waitTimer -= Time.deltaTime;
+                timer -= Time.deltaTime;
             }
             else
             {
