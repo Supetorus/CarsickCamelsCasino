@@ -14,10 +14,9 @@ public class UIRainbow : MonoBehaviour
         Color tempAlpha = color;
         Color.RGBToHSV(color, out h, out s, out v);
 
-        Color beans = Color.HSVToRGB(h + Time.deltaTime * .02f, s, v);
+        Color beans = Color.HSVToRGB(h + Time.deltaTime * .5f, s, v);
 
         beans.a = tempAlpha.a;
-       // Debug.Log(beans.ToString());
         label.color = beans;
     }
 }

@@ -34,7 +34,7 @@ public class UIAnnouncement : MonoBehaviour
                 color.a -= 1 * Time.deltaTime / 2;
             }
         }
-        Debug.Log(color.a);
+        
         label.color = color;
     }
 }

@@ -293,6 +293,7 @@ public class Roulette : MonoBehaviour
 			if (won == true)
             {
 				payoutText.Display("You have won " + payout + " chips!");
+				playerMoney.text = "Chips: $" + playerInfo.chipBalance;
 			}
 
 		}
