@@ -21,7 +21,7 @@ public class Roulette : MonoBehaviour
 {
 	[SerializeField] TMP_Text playerMoney;
 	[SerializeField] TMP_Text totalBetText;
-	[SerializeField] TMP_Text payoutText;
+	[SerializeField] UIAnnouncement payoutText;
 	[SerializeField] GameObject rollImage;
 	[SerializeField] GameObject highlight;
 	[SerializeField] PlayerInfo playerInfo;
@@ -203,6 +203,8 @@ public class Roulette : MonoBehaviour
 	{
 		buttons = GetComponentsInChildren<RButton>();
 
+		payoutText.Display("You have won 10 chips!");
+
 		int c = 0;
 		foreach (var chip in chipPanel.GetComponentsInChildren<Button>())
 		{
@@ -274,6 +276,7 @@ public class Roulette : MonoBehaviour
 			else { rollImage.GetComponent<Image>().sprite = colors[1]; }
 
 			int payout = 0;
+			bool won = false;
 
 			foreach (int cell in selectedCells)
 			{
@@ -281,12 +284,17 @@ public class Roulette : MonoBehaviour
 				{
 					payout += betMultiplier[bets[cell].multiplier] * betAmts[buttons[cell].chip];
 					playerInfo.chipBalance += payout;
+
+					won = true;
+					
 				}
 			}
 
-			payoutText.gameObject.SetActive(true);
-			payoutText.text = "Payout: $" + payout;
-			playerMoney.text = "Chips: $" + playerInfo.chipBalance;
+			if (won == true)
+            {
+				payoutText.Display("You have won " + payout + " chips!");
+			}
+
 		}
 	}
 }

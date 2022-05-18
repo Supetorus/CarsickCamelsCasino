@@ -6,20 +6,35 @@ using UnityEngine;
 public class UIAnnouncement : MonoBehaviour
 {
     [SerializeField] TMP_Text label;
-    Color rgba = new Color(0, ((float)85 / 255), 0, 255);
+    [SerializeField] float waitTimer = 0;
 
     public void Display(string text)
     {
         label.text = text;
-        rgba.a = 1;
+        Color color = label.color;
+        color.a = 1;
+        waitTimer = 1;
+        label.color = color;
+
     }
 
     void Update()
     {
-        if (rgba.a > 0)
+        Color color = label.color;
+
+        if ( color.a  >  0)
         {
-            rgba.a -= 1 * Time.deltaTime / 2;
+            if (waitTimer > 0)
+            {
+                waitTimer -= Time.deltaTime;
+            }
+            else
+            {
+                color.a -= 1 * Time.deltaTime / 2;
+            }
         }
-        label.color = rgba;
+        Debug.Log(color.a);
+        label.color = color;
     }
 }
+

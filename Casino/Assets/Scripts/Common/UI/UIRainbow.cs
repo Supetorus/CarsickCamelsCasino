@@ -10,10 +10,14 @@ public class UIRainbow : MonoBehaviour
     void Update()
     {
         float h, s, v;
-        Color.RGBToHSV(label.color, out h, out s, out v);
+        Color color = label.color;
+        Color tempAlpha = color;
+        Color.RGBToHSV(color, out h, out s, out v);
 
-        Color beans = Color.HSVToRGB(h + Time.deltaTime * .25f, s, v);
-        Debug.Log(beans.ToString());
+        Color beans = Color.HSVToRGB(h + Time.deltaTime * .02f, s, v);
+
+        beans.a = tempAlpha.a;
+       // Debug.Log(beans.ToString());
         label.color = beans;
     }
 }
