@@ -29,7 +29,7 @@ public class RButton : MonoBehaviour
 		}
 		else
 		{
-			rect.sizeDelta = size;
+			if (size != Vector2.zero) { rect.sizeDelta = size; }
 			image.sprite = null;
 			image.color = Color.clear;
 			image.raycastPadding = Vector4.zero;

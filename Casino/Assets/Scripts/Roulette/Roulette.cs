@@ -203,7 +203,7 @@ public class Roulette : MonoBehaviour
 	{
 		buttons = GetComponentsInChildren<RButton>();
 
-		
+
 
 		int c = 0;
 		foreach (var chip in chipPanel.GetComponentsInChildren<Button>())
@@ -256,7 +256,7 @@ public class Roulette : MonoBehaviour
 			selectedCells.Add(i);
 		}
 
-		totalBetText.text = "Total Bet: $" +  totalBet;
+		totalBetText.text = "Total Bet: $" + totalBet;
 	}
 
 	public void Spin()
@@ -286,16 +286,28 @@ public class Roulette : MonoBehaviour
 					playerInfo.chipBalance += payout;
 
 					won = true;
-					
 				}
 			}
 
-			if (won == true)
-            {
+			if (won)
+			{
 				payoutText.Display("You have won " + payout + " chips!");
 				playerMoney.text = "Chips: $" + playerInfo.chipBalance;
 			}
-
 		}
+	}
+
+	public void Clear()
+	{
+		foreach(RButton b in buttons)
+		{
+			b.SetChip(false, null);
+			b.chip = -1;
+		}
+
+		selectedCells.Clear();
+
+		totalBet = 0;
+		totalBetText.text = "Total Bet: $" + totalBet;
 	}
 }
