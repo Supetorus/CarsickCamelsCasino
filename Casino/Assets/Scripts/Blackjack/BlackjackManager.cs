@@ -8,80 +8,42 @@ public class BlackjackManager : MonoBehaviour
 {
 	public CardManager cardManager;
 	public PlayerInfo playerInfo;
+	public int minBet = 2;
+	public Sprite faceDownCard;
+	public List<Card> playerDebugHand;
+	public List<Card> dealerDebugHand;
+
+	[Header("Displays")]
 	public TMP_Text playerAvailableChips;
 	public TMP_Text playerAvailableBalance;
 	public TMP_Text playerBetValue;
 	public TMP_Text playerSplitBetValue;
-
-	/// <summary>
-	/// Prefabs for each card in a deck.
-	/// </summary>
-	//public List<Card> cards = new List<Card>();
-
-	/// <summary>
-	/// The cards in the dealer's hand
-	/// </summary>
 	private List<Card> dealerHand = new List<Card>();
-
-	/// <summary>
-	/// The cards in the player's hand
-	/// </summary>
 	private List<Card> playerHand = new List<Card>();
 	private List<Card> playerSplitHand = new List<Card>();
-	public List<Card> playerDebugHand;
-	public List<Card> dealerDebugHand;
-
-	/// <summary>
-	/// The parent gameobject where player cards should be instantiated.
-	/// </summary>
-	public GameObject playerHandLocation;
-	public GameObject playerSplitHandLocation;
-
-	/// <summary>
-	/// The text display for the player's hand value.
-	/// </summary>
 	public TMP_Text playerHandText;
 	public TMP_Text playerSplitHandText;
-
-	/// <summary>
-	/// The text display for the dealer's hand value.
-	/// </summary>
 	public TMP_Text dealerHandText;
 
-	/// <summary>
-	/// The parent gameobject where dealer cards should be instantiated.
-	/// </summary>
+	[Header("Locations")]
+	public GameObject playerHandLocation;
+	public GameObject playerSplitHandLocation;
 	public GameObject dealerHandLocation;
-
-	/// <summary>
-	/// The sprite shown for a card that is face down.
-	/// </summary>
-	public Sprite faceDownCard;
-
-	public GameObject gameEndPanel;
-	public GameObject splitButton;
-	public GameObject doubleButton;
-
-	public int minBet = 2;
-
-	public GameObject splitHandIndicator;
 	private Vector2 splitHandIndicatorLocation1 = new Vector2(415, -175);
 	private Vector2 splitHandIndicatorLocation2 = new Vector2(415, -403);
 
+	[Header("Objects")]
+	public GameObject splitButton;
+	public GameObject doubleButton;
+	public GameObject gameEndPanel;
+	public GameObject splitHandIndicator;
+
 	private int playerBet = 0;
 	private int playerSplitBet = 0; //todo fully implement playersplitbet
-
-	/// <summary>
-	/// A deck of prefab cards which have not been dealt.
-	/// </summary>
-	//private List<Card> deck = new List<Card>();
-
-
-	bool isSplitHand = false;
-
-	int playerScore = 0;
-	int playerSplitScore = 0;
-	int dealerScore = 0;
+	private bool isSplitHand = false;
+	private int playerScore = 0;
+	private int playerSplitScore = 0;
+	private int dealerScore = 0;
 
 	private enum GameState
 	{
