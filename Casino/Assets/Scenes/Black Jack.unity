@@ -592,7 +592,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 386549661}
         m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -930,7 +930,7 @@ MonoBehaviour:
   playerAvailableChips: {fileID: 806609038}
   playerAvailableBalance: {fileID: 394012333}
   playerBetValue: {fileID: 452864192}
-  playerSplitBetValue: {fileID: 1383235184}
+  playerSplitBetValue: {fileID: 0}
   cards:
   - {fileID: 2963533429402412284, guid: f7e1aee9dd3ff964cb3a6d69b0a348cf, type: 3}
   - {fileID: 5501999075370909434, guid: c81dbd9ccb294384db53bb748b76e5aa, type: 3}
@@ -984,6 +984,12 @@ MonoBehaviour:
   - {fileID: 515209812322622723, guid: df26d736d419a144685426afb6ac098c, type: 3}
   - {fileID: 4799009619330504943, guid: 3185cdbcb95943e4a9d95866c51a84b0, type: 3}
   - {fileID: 365955735139167363, guid: 5eb88c5ceeea35a4e8467cd8db77b1fa, type: 3}
+  playerDebugHand:
+  - {fileID: 7136750188226168830, guid: 1fd536da4bf52954ca0310a2d24ab908, type: 3}
+  - {fileID: 7663522052832081887, guid: 564a6b633e4e6414dbdf4c8797ea4d9f, type: 3}
+  dealerDebugHand:
+  - {fileID: 4025855233649866228, guid: 6021f9d0407deca4dbc8d7764d7be77e, type: 3}
+  - {fileID: 2963533429402412284, guid: f7e1aee9dd3ff964cb3a6d69b0a348cf, type: 3}
   playerHandLocation: {fileID: 284154079}
   playerSplitHandLocation: {fileID: 1088704511}
   playerHandText: {fileID: 1283721791}
@@ -995,6 +1001,7 @@ MonoBehaviour:
   splitButton: {fileID: 269367278}
   doubleButton: {fileID: 158498565}
   minBet: 2
+  splitHandIndicator: {fileID: 903629454}
 --- !u!4 &386549662
 Transform:
   m_ObjectHideFlags: 0
@@ -1986,6 +1993,7 @@ RectTransform:
   - {fileID: 1594362447}
   - {fileID: 1371176767}
   - {fileID: 1115808061}
+  - {fileID: 903629455}
   m_Father: {fileID: 813972169}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2182,6 +2190,82 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7413716107679150671, guid: c769a98a313cf34498fde68ba29938d3, type: 3}
   m_PrefabInstance: {fileID: 8710400815976564236}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &903629454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 903629455}
+  - component: {fileID: 903629457}
+  - component: {fileID: 903629456}
+  m_Layer: 5
+  m_Name: SplitHandIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &903629455
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903629454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 806671473}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 415, y: -403}
+  m_SizeDelta: {x: 48.0702, y: 12.982597}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &903629456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903629454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 1, b: 0.09206605, a: 0.62352943}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &903629457
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903629454}
+  m_CullTransparentMesh: 1
 --- !u!1 &908447928
 GameObject:
   m_ObjectHideFlags: 0

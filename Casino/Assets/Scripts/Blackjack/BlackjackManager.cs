@@ -21,6 +21,19 @@ public class BlackjackManager : MonoBehaviour
     public List<Card> cards = new List<Card>();
 
     /// <summary>
+    /// The cards in the dealer's hand
+    /// </summary>
+    List<Card> dealerHand = new List<Card>();
+
+    /// <summary>
+    /// The cards in the player's hand
+    /// </summary>
+    List<Card> playerHand = new List<Card>();
+    List<Card> playerSplitHand = new List<Card>();
+    public List<Card> playerDebugHand;
+    public List<Card> dealerDebugHand;
+
+    /// <summary>
     /// The parent gameobject where player cards should be instantiated.
     /// </summary>
     public GameObject playerHandLocation;
@@ -53,26 +66,20 @@ public class BlackjackManager : MonoBehaviour
 
     public int minBet = 2;
 
+    public GameObject splitHandIndicator;
+    private Vector2 splitHandIndicatorLocation1 = new Vector2(415, -175);
+    private Vector2 splitHandIndicatorLocation2 = new Vector2(415, -403);
+
     private int playerBet = 0;
-    private int playerSplitBet = 0;
+    private int playerSplitBet = 0; //todo fully implement playersplitbet
 
     /// <summary>
     /// A deck of prefab cards which have not been dealt.
     /// </summary>
     private List<Card> deck = new List<Card>();
 
-    /// <summary>
-    /// The cards in the dealer's hand
-    /// </summary>
-    List<Card> dealerHand = new List<Card>();
 
-    /// <summary>
-    /// The cards in the player's hand
-    /// </summary>
-    List<Card> playerHand = new List<Card>();
-    List<Card> playerSplitHand = new List<Card>();
-
-    bool splitHand = false;
+    bool isSplitHand = false;
 
     int playerScore = 0;
     int playerSplitScore = 0;
@@ -89,10 +96,10 @@ public class BlackjackManager : MonoBehaviour
 
     private void Start()
     {
-        playerAvailableChips.text = playerInfo.chipBalance.ToString();
-        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
+        DisplayMoney();
 
         gameState = GameState.Betting;
+        playerSplitHandLocation.SetActive(false);
         gameEndPanel.SetActive(false);
     }
 
@@ -102,6 +109,7 @@ public class BlackjackManager : MonoBehaviour
     public void Deal()
     {
         if (gameState != GameState.Betting || playerBet < minBet) return;
+        splitHandIndicator.SetActive(false);
         gameState = GameState.Playing;
         Shuffle();
         playerHand.Clear();
@@ -112,14 +120,14 @@ public class BlackjackManager : MonoBehaviour
             Destroy(card.gameObject);
         }
 
-        playerHand.Add(cards[38]);
-        playerHand.Add(cards[39]);
-
         for (int i = 0; i < 2; i++)
         {
-            //playerHand.Add(GetCard());
-            dealerHand.Add(GetCard());
+			playerHand.Add(GetCard());
+			dealerHand.Add(GetCard());
         }
+
+        if (playerDebugHand != null) playerHand = playerDebugHand;
+        if (dealerDebugHand != null) dealerHand = dealerDebugHand;
 
         if (playerInfo.chipBalance < playerBet)
         {
@@ -146,7 +154,7 @@ public class BlackjackManager : MonoBehaviour
     public void DoubleDown()
     {
         playerInfo.chipBalance -= playerBet;
-        if (splitHand)
+        if (isSplitHand)
         {
             playerSplitBet *= 2;
             playerSplitHand.Add(GetCard());
@@ -165,6 +173,7 @@ public class BlackjackManager : MonoBehaviour
     /// </summary>
     public void Split()
     {
+        playerSplitHandLocation.SetActive(true);
         playerSplitHand.Add(playerHand[1]);
         playerHand.RemoveAt(1);
 
@@ -176,7 +185,10 @@ public class BlackjackManager : MonoBehaviour
         DisplayCards();
         CheckBlackjack();
 
-        splitHand = true;
+        isSplitHand = true;
+
+        splitHandIndicator.SetActive(true);
+        splitHandIndicator.GetComponent<RectTransform>().localPosition = splitHandIndicatorLocation1;
 
         if (playerInfo.chipBalance < playerBet)
         {
@@ -229,12 +241,13 @@ public class BlackjackManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the chips displays.
+    /// Updates the chips and money displays.
     /// </summary>
-    public void DisplayChips()
+    public void DisplayMoney()
     {
         playerBetValue.text = playerBet.ToString();
         playerAvailableChips.text = playerInfo.chipBalance.ToString();
+        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
     }
 
     /// <summary>
@@ -254,7 +267,7 @@ public class BlackjackManager : MonoBehaviour
     {
         if (gameState != GameState.Playing) return;
 
-        if (splitHand)
+        if (isSplitHand)
         {
             playerSplitHand.Add(GetCard());
             DisplayCards();
@@ -264,21 +277,24 @@ public class BlackjackManager : MonoBehaviour
                 {
                     doubleButton.SetActive(true);
                 }
-                splitHand = false;
+                isSplitHand = false;
+                splitHandIndicator.GetComponent<RectTransform>().localPosition = splitHandIndicatorLocation2;
                 return;
             }
         }
-
-        playerHand.Add(GetCard());
-        if (CalculateHandValue(playerHand) >= 21) StartCoroutine(GameOver());
-        DisplayCards();
+        else
+        {
+            playerHand.Add(GetCard());
+            if (CalculateHandValue(playerHand) >= 21) StartCoroutine(GameOver());
+            DisplayCards();
+        }
     }
 
     private void CheckBlackjack()
     {
         if (CalculateHandValue(playerSplitHand) == 21)
         {
-            splitHand = false;
+            isSplitHand = false;
         }
 
         if (CalculateHandValue(playerHand) == 21)
@@ -288,8 +304,11 @@ public class BlackjackManager : MonoBehaviour
         }
     }
 
-    public void Reset()
+    public void ResetGame()
     {
+        playerSplitHandLocation.SetActive(false);
+        splitHandIndicator.SetActive(false);
+        isSplitHand = false;
         playerHand.Clear();
         playerSplitHand.Clear();
         dealerHand.Clear();
@@ -297,7 +316,7 @@ public class BlackjackManager : MonoBehaviour
         playerSplitBet = 0;
 
         DisplayCards();
-        DisplayChips();
+        DisplayMoney();
         gameState = GameState.Betting;
     }
 
@@ -308,13 +327,14 @@ public class BlackjackManager : MonoBehaviour
     {
         if (gameState != GameState.Playing) return;
 
-        if (splitHand)
+        if (isSplitHand)
         {
-            if (playerInfo.chipBalance >= playerBet && playerInfo.chipBalance >= minBet)
+            if (playerInfo.chipBalance >= playerBet)// && playerInfo.chipBalance >= minBet)
             {
                 doubleButton.SetActive(true);
             }
-            splitHand = false;
+            isSplitHand = false;
+            splitHandIndicator.GetComponent<RectTransform>().localPosition = splitHandIndicatorLocation2;
         }
         else
         {
@@ -384,7 +404,7 @@ public class BlackjackManager : MonoBehaviour
         {
             playerBet += bet;
             playerInfo.chipBalance -= bet;
-            DisplayChips();
+            DisplayMoney();
         }
     }
 
@@ -404,26 +424,15 @@ public class BlackjackManager : MonoBehaviour
     }
 
     private IEnumerator GameOver()
-    {
-        playerScore = CalculateHandValue(playerHand);
-        playerSplitScore = CalculateHandValue(playerSplitHand);
-        dealerScore = CalculateHandValue(dealerHand);
+	{
+		int playerScore = CalculateHandValue(playerHand);
+		int dealerScore = CalculateHandValue(dealerHand);
 
-        if (playerScore == 21) // player has 21
-        {
-            if (dealerScore == 21)
-            {
-                if (playerHand.Count == 2 && dealerHand.Count != 2)
-                {
-                    playerInfo.chipBalance += playerBet * 3;
-                }
-                else
-                {
-                    playerInfo.chipBalance += playerBet;
-                }
-            }
-            else playerInfo.chipBalance += playerBet * 2;
-        }
+		if (playerScore == 21) // player has 21
+		{
+            if (dealerScore == 21) playerInfo.chipBalance += playerBet;
+            else playerInfo.chipBalance += playerBet * 3;
+		}
         else if (dealerScore > 21)
         {
             playerInfo.chipBalance += playerBet * 2;
@@ -435,7 +444,7 @@ public class BlackjackManager : MonoBehaviour
         }
 
         DisplayCards();
-        DisplayChips();
+        DisplayMoney();
 
         yield return new WaitForSeconds(2);
 
