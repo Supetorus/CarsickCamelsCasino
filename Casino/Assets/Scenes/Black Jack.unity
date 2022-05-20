@@ -907,6 +907,7 @@ GameObject:
   m_Component:
   - component: {fileID: 386549662}
   - component: {fileID: 386549661}
+  - component: {fileID: 386549663}
   m_Layer: 0
   m_Name: BlackJack
   m_TagString: Untagged
@@ -926,11 +927,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2e4a16bc569a3b40967302e9cd9cf58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardManager: {fileID: 386549663}
   playerInfo: {fileID: 11400000, guid: b8486626d6fa3504f83fbc2ff34ffba6, type: 2}
   playerAvailableChips: {fileID: 806609038}
   playerAvailableBalance: {fileID: 394012333}
   playerBetValue: {fileID: 452864192}
-  playerSplitBetValue: {fileID: 0}
+  playerSplitBetValue: {fileID: 1383235184}
+  playerDebugHand:
+  - {fileID: 7136750188226168830, guid: 1fd536da4bf52954ca0310a2d24ab908, type: 3}
+  - {fileID: 7663522052832081887, guid: 564a6b633e4e6414dbdf4c8797ea4d9f, type: 3}
+  dealerDebugHand:
+  - {fileID: 4025855233649866228, guid: 6021f9d0407deca4dbc8d7764d7be77e, type: 3}
+  - {fileID: 2963533429402412284, guid: f7e1aee9dd3ff964cb3a6d69b0a348cf, type: 3}
+  playerHandLocation: {fileID: 284154079}
+  playerSplitHandLocation: {fileID: 1088704511}
+  playerHandText: {fileID: 1283721791}
+  playerSplitHandText: {fileID: 1594362449}
+  dealerHandText: {fileID: 1115808062}
+  dealerHandLocation: {fileID: 1371176763}
+  faceDownCard: {fileID: 21300000, guid: 43518d503aa071841b5b08d44701330c, type: 3}
+  gameEndPanel: {fileID: 843052531}
+  splitButton: {fileID: 269367278}
+  doubleButton: {fileID: 158498565}
+  minBet: 2
+  splitHandIndicator: {fileID: 903629454}
+--- !u!4 &386549662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386549660}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &386549663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386549660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5dd2527b2b3d94baae9a1a65ccbe86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   cards:
   - {fileID: 2963533429402412284, guid: f7e1aee9dd3ff964cb3a6d69b0a348cf, type: 3}
   - {fileID: 5501999075370909434, guid: c81dbd9ccb294384db53bb748b76e5aa, type: 3}
@@ -984,39 +1031,6 @@ MonoBehaviour:
   - {fileID: 515209812322622723, guid: df26d736d419a144685426afb6ac098c, type: 3}
   - {fileID: 4799009619330504943, guid: 3185cdbcb95943e4a9d95866c51a84b0, type: 3}
   - {fileID: 365955735139167363, guid: 5eb88c5ceeea35a4e8467cd8db77b1fa, type: 3}
-  playerDebugHand:
-  - {fileID: 7136750188226168830, guid: 1fd536da4bf52954ca0310a2d24ab908, type: 3}
-  - {fileID: 7663522052832081887, guid: 564a6b633e4e6414dbdf4c8797ea4d9f, type: 3}
-  dealerDebugHand:
-  - {fileID: 4025855233649866228, guid: 6021f9d0407deca4dbc8d7764d7be77e, type: 3}
-  - {fileID: 2963533429402412284, guid: f7e1aee9dd3ff964cb3a6d69b0a348cf, type: 3}
-  playerHandLocation: {fileID: 284154079}
-  playerSplitHandLocation: {fileID: 1088704511}
-  playerHandText: {fileID: 1283721791}
-  playerSplitHandText: {fileID: 1594362449}
-  dealerHandText: {fileID: 1115808062}
-  dealerHandLocation: {fileID: 1371176763}
-  faceDownCard: {fileID: 21300000, guid: 43518d503aa071841b5b08d44701330c, type: 3}
-  gameEndPanel: {fileID: 843052531}
-  splitButton: {fileID: 269367278}
-  doubleButton: {fileID: 158498565}
-  minBet: 2
-  splitHandIndicator: {fileID: 903629454}
---- !u!4 &386549662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386549660}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &390935960 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1900156090653322670, guid: e961dbc78b76b25419cedc8a04c5d036, type: 3}
