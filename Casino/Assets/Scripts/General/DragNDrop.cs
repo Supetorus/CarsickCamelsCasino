@@ -4,17 +4,62 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler
+public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [SerializeField] public int betValue;
+    [SerializeField] PlayerInfo playerInfo;
+    [SerializeField] GameObject parent;
+    [SerializeField] bool respawn = true;
+    
     private Vector2 dragOffset;
+    private CanvasGroup canvasGroup;
+    private bool valueAdded = false;
+
+    public void Start()
+    {
+        canvasGroup = gameObject.GetComponent<CanvasGroup>();
+    }
+
+    public void Update()
+    {
+        if (playerInfo.chipBalance < betValue && !valueAdded)
+        {
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.alpha = 0.5f;
+        }
+        else if (!valueAdded)
+        {
+            canvasGroup.blocksRaycasts = true;
+            canvasGroup.alpha = 1f;
+        }
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         dragOffset = eventData.position - (Vector2)transform.position;
+
+        if (respawn)
+        {
+            Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation, parent.transform);
+            respawn = false;
+        }
+
+        if (!valueAdded)
+        {
+            playerInfo.chipBalance -= betValue;
+            valueAdded = true;
+        }
+
+        canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         transform.position = eventData.position - dragOffset;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        canvasGroup.blocksRaycasts = true;
     }
 }
