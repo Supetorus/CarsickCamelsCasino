@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class Dropper : MonoBehaviour
 {
+    [SerializeField] PlinkoManager manager;
     [SerializeField] GameObject highlight;
     [SerializeField] GameObject ballPrefab;
 
     public bool ballActive;
+    private Color highlightColor;
 
     void Start()
     {
-
+        highlightColor = highlight.GetComponent<SpriteRenderer>().color;
     }
 
     void Update()
@@ -22,13 +24,20 @@ public class Dropper : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Instantiate(ballPrefab, highlight.transform.position, highlight.transform.rotation);
+        if (!ballActive && manager.playerBet >= manager.minBet)
+        {
+            Instantiate(ballPrefab, highlight.transform.position, highlight.transform.rotation);
+            manager.DropBall();
+            ballActive = true;
+        }
     }
 
     private void OnMouseOver()
     {
         if (!ballActive)
         {
+            highlightColor.a = 1;
+            highlight.GetComponent<SpriteRenderer>().color = highlightColor;
             Vector3 mPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mPos.z = 0;
             mPos.y = 5.25f;
@@ -36,6 +45,11 @@ public class Dropper : MonoBehaviour
             //Debug.Log(mPos);
             highlight.transform.position = mPos;
             //Debug.Log(highlight.transform.position);
+        }
+        else
+        {
+            highlightColor.a = 0;
+            highlight.GetComponent<SpriteRenderer>().color = highlightColor;
         }
     }
 }

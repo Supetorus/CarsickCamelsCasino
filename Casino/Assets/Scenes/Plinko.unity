@@ -1062,6 +1062,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 10
 --- !u!1 &206460985
 GameObject:
   m_ObjectHideFlags: 0
@@ -2552,10 +2555,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInfo: {fileID: 11400000, guid: b8486626d6fa3504f83fbc2ff34ffba6, type: 2}
   playerAvailableChips: {fileID: 806609038}
-  playerAvailableBalance: {fileID: 1346152133}
+  playerAvailableBalance: {fileID: 394012333}
   playerBetValue: {fileID: 452864192}
   gameEndPanel: {fileID: 843052531}
   minBet: 2
+  playerBet: 0
 --- !u!1 &390935960 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1900156090653322670, guid: e961dbc78b76b25419cedc8a04c5d036, type: 3}
@@ -3103,6 +3107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 2
 --- !u!1 &452864189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3987,6 +3994,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &571520696
 GameObject:
   m_ObjectHideFlags: 0
@@ -4271,6 +4281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &579459002
 GameObject:
   m_ObjectHideFlags: 0
@@ -4422,6 +4435,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &597845371
 GameObject:
   m_ObjectHideFlags: 0
@@ -8610,6 +8626,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 2
 --- !u!1 &1282179846
 GameObject:
   m_ObjectHideFlags: 0
@@ -9776,6 +9795,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 5
 --- !u!1 &1390937811
 GameObject:
   m_ObjectHideFlags: 0
@@ -10647,8 +10669,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f85728ed9fb444388591e8ef9c4afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
   highlight: {fileID: 780865144}
   ballPrefab: {fileID: 4765082547377298814, guid: 8d492eb56190fcd40ace095e2ad27390, type: 3}
+  ballActive: 0
 --- !u!61 &1467044066
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13477,6 +13501,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &1919437621
 GameObject:
   m_ObjectHideFlags: 0
@@ -13756,6 +13783,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &1929357933
 GameObject:
   m_ObjectHideFlags: 0
@@ -15000,6 +15030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 0
 --- !u!1 &2060580579
 GameObject:
   m_ObjectHideFlags: 0
@@ -15320,6 +15353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721e6c469094c3943885eea0675942ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 386549663}
+  dropper: {fileID: 1467044065}
+  returnValue: 5
 --- !u!1 &2107947636
 GameObject:
   m_ObjectHideFlags: 0
@@ -16117,8 +16153,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -16286,8 +16322,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -16455,8 +16491,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -16624,8 +16660,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -16793,8 +16829,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -16962,8 +16998,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -17131,8 +17167,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -17300,8 +17336,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
@@ -17469,8 +17505,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BlackjackManager, Assembly-CSharp
+      - m_Target: {fileID: 386549663}
+        m_TargetAssemblyTypeName: PlinkoManager, Assembly-CSharp
         m_MethodName: AddBet
         m_Mode: 3
         m_Arguments:
