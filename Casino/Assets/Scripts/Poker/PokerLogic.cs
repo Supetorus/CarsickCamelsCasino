@@ -14,12 +14,14 @@ public class PokerLogic : MonoBehaviour
     public TMP_Text playerAvailableChips;
     public TMP_Text playerAvailableBalance;
     public TMP_Text playerBetValue;
+    public TMP_Text playerHandText;
     private List<Card> playerHand = new List<Card>();
 
     [Header("Locations")]
     public GameObject playerHandLocation;
 
     private int playerBet = 0;
+    private int playerScore = 0;
 
     private enum GameState
     {
@@ -63,9 +65,47 @@ public class PokerLogic : MonoBehaviour
     {
         if (playerHand.Count < 0) return;
 
-        //IMPLEMENT WINS WITH AUSTIN'S CODE ON CARDMANAGER
-        //playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Blackjack);
-        //playerHandText.text = playerScore.ToString();
+        playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
+        if(playerScore == 0)
+        {
+            playerHandText.text = "No win";
+        }
+        else if (playerScore == 1)
+        {
+            playerHandText.text = "Pair";
+        }
+        else if (playerScore == 2)
+        {
+            playerHandText.text = "Two Pair";
+        }
+        else if (playerScore == 3)
+        {
+            playerHandText.text = "Three of a Kind";
+        }
+        else if (playerScore == 4)
+        {
+            playerHandText.text = "Straight";
+        }
+        else if (playerScore == 5)
+        {
+            playerHandText.text = "Flush";
+        }
+        else if (playerScore == 6)
+        {
+            playerHandText.text = "Full House";
+        }
+        else if (playerScore == 7)
+        {
+            playerHandText.text = "Four of a Kind";
+        }
+        else if (playerScore == 8)
+        {
+            playerHandText.text = "Straight Flush";
+        }
+        else if (playerScore == 9)
+        {
+            playerHandText.text = "Royal Flush";
+        }
 
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
         foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
@@ -90,17 +130,56 @@ public class PokerLogic : MonoBehaviour
 
     private IEnumerator GameOver()
     {
-        //int playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Blackjack);
-
-        /* If (Player wins) 
-         * {
-         *      Multiply their bet by type of win and return chips to player
-         * }
-         * If (Player loses)
-         * {
-         *      Make bet zero and and don't return anything
-         * }
-         */
+        playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
+        if (playerScore == 0)
+        {
+            playerBet = 0;
+        }
+        else if (playerScore == 1)
+        {
+            playerInfo.chipBalance += playerBet;
+            playerBet = 0;
+        }
+        else if (playerScore == 2)
+        {
+            playerInfo.chipBalance += playerBet * 5;
+            playerBet = 0;
+        }
+        else if (playerScore == 3)
+        {
+            playerInfo.chipBalance += playerBet * 10;
+            playerBet = 0;
+        }
+        else if (playerScore == 4)
+        {
+            playerInfo.chipBalance += playerBet * 25;
+            playerBet = 0;
+        }
+        else if (playerScore == 5)
+        {
+            playerInfo.chipBalance += playerBet * 50;
+            playerBet = 0;
+        }
+        else if (playerScore == 6)
+        {
+            playerInfo.chipBalance += playerBet * 100;
+            playerBet = 0;
+        }
+        else if (playerScore == 7)
+        {
+            playerInfo.chipBalance += playerBet * 1000;
+            playerBet = 0;
+        }
+        else if (playerScore == 8)
+        {
+            playerInfo.chipBalance += playerBet * 10000;
+            playerBet = 0;
+        }
+        else if (playerScore == 9)
+        {
+            playerInfo.chipBalance += playerBet * 100000;
+            playerBet = 0;
+        }
 
         DisplayCards();
         DisplayMoney();

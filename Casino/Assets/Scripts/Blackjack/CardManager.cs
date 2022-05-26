@@ -8,7 +8,22 @@ public class CardManager : MonoBehaviour
 	public enum CardRules
 	{
 		Blackjack,
+		Poker
 	}
+
+	public enum PokerHandValue
+    {
+		HighCard,
+		Pair,
+		TwoPair,
+		ThreeOfAKind,
+		Straight,
+		Flush,
+		FullHouse,
+		FourOfAKind,
+		StraightFlush,
+		RoyalFlush
+    }
 
 	/// <summary>
 	/// A deck of prefab cards which have not been dealt.
@@ -60,6 +75,8 @@ public class CardManager : MonoBehaviour
 		{
 			case CardRules.Blackjack:
 				return CalculateBlackJackHand(hand);
+			case CardRules.Poker:
+				return CalculatePokerHand(hand);
 			default:
 				return 0;
 		}
@@ -94,6 +111,46 @@ public class CardManager : MonoBehaviour
 		}
 
 		return result;
+	}
+
+	private int CalculatePokerHand(List<Card> hand)
+    {
+		PokerHandValue handValue;
+
+
+
+		// if royal flush
+		if (hand.Exists(c => c.value == Card.eValue.ACE) && hand.Exists(c => c.value == Card.eValue.KING) && hand.Exists(c => c.value == Card.eValue.QUEEN) && hand.Exists(c => c.value == Card.eValue.JACK) && hand.Exists(c => c.value == Card.eValue.TEN) && hand.FindAll(c => c.suit == hand[0].suit).Count == 5)
+			handValue = PokerHandValue.RoyalFlush;
+		// if straight flush
+		else if (false)
+			handValue = PokerHandValue.StraightFlush;
+		// if four of kind
+		else if (hand.FindAll(c => c.value == hand[0].value).Count == 4 || hand.FindAll(c => c.value == hand[1].value).Count == 4)
+			handValue = PokerHandValue.FourOfAKind;
+		// if full house
+		else if (false)
+			handValue = PokerHandValue.FullHouse;
+		// if flush
+		else if (hand.FindAll(c => c.suit == hand[0].suit).Count == 5) 
+			handValue = PokerHandValue.Flush;
+		// if straight
+		else if (false)
+			handValue = PokerHandValue.Straight;
+		// if three of kind
+		else if (hand.FindAll(c => c.value == hand[0].value).Count == 3 || hand.FindAll(c => c.value == hand[1].value).Count == 3 || hand.FindAll(c => c.value == hand[2].value).Count == 3)
+			handValue = PokerHandValue.ThreeOfAKind;
+		// if two pair
+		else if (false)
+			handValue = PokerHandValue.TwoPair;
+		// if pair
+		else if (false)
+			handValue = PokerHandValue.Pair;
+		// else
+		else
+			handValue = PokerHandValue.HighCard;
+
+		return (int)handValue;
 	}
 
 	/// <summary>
