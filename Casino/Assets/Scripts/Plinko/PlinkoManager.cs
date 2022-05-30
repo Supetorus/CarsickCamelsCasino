@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,7 +18,7 @@ public class PlinkoManager : MonoBehaviour
 
     public int minBet = 2;
 
-    private int playerBet = 0;
+    public int playerBet = 0;
 
     private enum GameState
     {
@@ -28,9 +29,39 @@ public class PlinkoManager : MonoBehaviour
 
     private GameState gameState;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        playerBet = 0;
+        UpdateDisplay();
+    }
+
+    // Update is called once per frame
+    void UpdateDisplay()
+    {
+        playerBetValue.text = playerBet.ToString();
+        playerAvailableChips.text = playerInfo.chipBalance.ToString();
+        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
+    }
+
+    public void AddBet(int value)
+    {
+        if (playerBet + value <= playerInfo.chipBalance)
+        {
+            playerBet += value;
+            UpdateDisplay();
+        }
+    }
+
+    public void Score(int multiplier)
+    {
+        playerInfo.chipBalance += playerBet * multiplier;
+        playerBet = 0;
+        UpdateDisplay();
+    }
+
+    public void DropBall()
+    {
+        playerInfo.chipBalance -= playerBet;
+        UpdateDisplay();
     }
 }

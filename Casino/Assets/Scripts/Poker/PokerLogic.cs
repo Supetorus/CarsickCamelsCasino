@@ -6,108 +6,196 @@ using UnityEngine.UI;
 
 public class PokerLogic : MonoBehaviour
 {
+    public CardManager cardManager;
+    public PlayerInfo playerInfo;
+    public List<Card> playerDebugHand;
 
-    /*
-     * What the fridge needs the be done?
-     * -Get player's money count
-     * -Check if bet is valid
-     * -Let player "Hold" cards
-     * -Regenerate non-held cards
-     * -Check for win
-     * IF(win = payout/reset, lost = reset, lost + no money = main menu)
-     */
+    [Header("Displays")]
+    public TMP_Text playerAvailableChips;
+    public TMP_Text playerAvailableBalance;
+    public TMP_Text playerBetValue;
+    public TMP_Text playerHandText;
+    private List<Card> playerHand = new List<Card>();
 
-    /// <summary>
-    /// Created variables for the on screen text to be set
-    /// </summary>
-    public TMP_Text playerMoneyCount;
-    public TMP_Text playerBetAmount;
-    public TMP_Text playerAnnouncement;
-
-    /// <summary>
-    /// The parent gameobject where player cards should be instantiated.
-    /// </summary>
+    [Header("Locations")]
     public GameObject playerHandLocation;
 
-    /// <summary>
-    /// Generate prefabs for the cards and a deck to be pulled from
-    /// </summary>
-    public List<Card> cards = new List<Card>();
-    private List<Card> deck = new List<Card>();
-
-    /// <summary>
-    /// The cards in the player's hand and bet amount
-    /// </summary>
-    List<Card> playerHand = new List<Card>();
     private int playerBet = 0;
+    private int playerScore = 0;
+
+    private enum GameState
+    {
+        Betting,
+        FirstDraw,
+        Redraw,
+        GameOver
+    }
+
+    private GameState gameState;
+
+    private void Start()
+    {
+        playerAvailableChips.text = playerInfo.chipBalance.ToString();
+        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
+
+        gameState = GameState.Betting;
+    }
 
     /// <summary>
-    /// Shuffles the deck and deals five cards to player
+    /// Shuffles the deck and deals five cards to player. Called when the "Bet" button is clicked
     /// </summary>
     public void Deal()
     {
-        Shuffle();
-        playerHand.Clear();
+        if (gameState != GameState.Betting) return;
+        gameState = GameState.FirstDraw;
+        cardManager.Shuffle();
+        cardManager.Deal(5, true, playerHand);
 
-        foreach (Transform card in playerHandLocation.transform)
-        {
-            Destroy(card.gameObject);
-        }
+        foreach (Transform card in playerHandLocation.transform) Destroy(card.gameObject);
 
-        for (int i = 0; i < 5; i++)
-        {
-            playerHand.Add(GetCard());
-        }
+        if (playerDebugHand != null) playerHand = playerDebugHand;
 
-        Display();
+        DisplayCards();
     }
 
     /// <summary>
     /// Updates the card displays and value display
     /// </summary>
-    public void Display()
+    public void DisplayCards()
     {
-
-        playerBetAmount.text = playerBet.ToString();
-
         if (playerHand.Count < 0) return;
+
+        playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
+        if(playerScore == 0)
+        {
+            playerHandText.text = "No win";
+        }
+        else if (playerScore == 1)
+        {
+            playerHandText.text = "Pair";
+        }
+        else if (playerScore == 2)
+        {
+            playerHandText.text = "Two Pair";
+        }
+        else if (playerScore == 3)
+        {
+            playerHandText.text = "Three of a Kind";
+        }
+        else if (playerScore == 4)
+        {
+            playerHandText.text = "Straight";
+        }
+        else if (playerScore == 5)
+        {
+            playerHandText.text = "Flush";
+        }
+        else if (playerScore == 6)
+        {
+            playerHandText.text = "Full House";
+        }
+        else if (playerScore == 7)
+        {
+            playerHandText.text = "Four of a Kind";
+        }
+        else if (playerScore == 8)
+        {
+            playerHandText.text = "Straight Flush";
+        }
+        else if (playerScore == 9)
+        {
+            playerHandText.text = "Royal Flush";
+        }
 
         foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
         foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
-        
     }
 
-    /// <summary>
-    /// Pops off the first card in the deck and returns it.
-    /// </summary>
-    public Card GetCard()
+    public void DisplayMoney()
     {
-        Card card = deck[0];
-        deck.RemoveAt(0);
-        return card;
+        playerBetValue.text = playerBet.ToString();
+        playerAvailableChips.text = playerInfo.chipBalance.ToString();
+        playerAvailableBalance.text = playerInfo.bankBalance.ToString();
     }
 
-    /// <summary>
-    /// Resets the deck to a fresh full randomized deck.
-    /// </summary>
-    public void Shuffle()
+    public void ResetGame()
     {
-        deck.Clear();
+        playerHand.Clear();
+        playerBet = 0;
 
-        List<Card> tempCards = new List<Card>(cards);
+        DisplayCards();
+        DisplayMoney();
+        gameState = GameState.Betting;
+    }
 
-        for (int i = 0; i < cards.Count; i++)
+    private IEnumerator GameOver()
+    {
+        playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
+        if (playerScore == 0)
         {
-            Card card = tempCards[Random.Range(0, tempCards.Count)];
-            card.isFaceUp = true;
-            deck.Add(card);
-            tempCards.Remove(card);
+            playerBet = 0;
         }
+        else if (playerScore == 1)
+        {
+            playerInfo.chipBalance += playerBet;
+            playerBet = 0;
+        }
+        else if (playerScore == 2)
+        {
+            playerInfo.chipBalance += playerBet * 5;
+            playerBet = 0;
+        }
+        else if (playerScore == 3)
+        {
+            playerInfo.chipBalance += playerBet * 10;
+            playerBet = 0;
+        }
+        else if (playerScore == 4)
+        {
+            playerInfo.chipBalance += playerBet * 25;
+            playerBet = 0;
+        }
+        else if (playerScore == 5)
+        {
+            playerInfo.chipBalance += playerBet * 50;
+            playerBet = 0;
+        }
+        else if (playerScore == 6)
+        {
+            playerInfo.chipBalance += playerBet * 100;
+            playerBet = 0;
+        }
+        else if (playerScore == 7)
+        {
+            playerInfo.chipBalance += playerBet * 1000;
+            playerBet = 0;
+        }
+        else if (playerScore == 8)
+        {
+            playerInfo.chipBalance += playerBet * 10000;
+            playerBet = 0;
+        }
+        else if (playerScore == 9)
+        {
+            playerInfo.chipBalance += playerBet * 100000;
+            playerBet = 0;
+        }
+
+        DisplayCards();
+        DisplayMoney();
+
+        yield return new WaitForSeconds(2);
+
     }
 
     public void AddBet(int bet)
     {
-        playerBet += bet;
-        Display();
+        if (gameState != GameState.Betting || playerInfo.chipBalance < bet) return;
+        if (playerInfo.chipBalance > bet)
+        {
+            playerBet += bet;
+            playerInfo.chipBalance -= bet;
+            DisplayMoney();
+        }
     }
 }
