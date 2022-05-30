@@ -10,6 +10,7 @@ public class BlackjackManager : MonoBehaviour
 	public PlayerInfo playerInfo;
 	public int minBet = 2;
 	public Sprite faceDownCard;
+	public bool debugMode = false;
 	public List<Card> playerDebugHand;
 	public List<Card> dealerDebugHand;
 
@@ -70,15 +71,23 @@ public class BlackjackManager : MonoBehaviour
 	public void Deal()
 	{
 		if (gameState != GameState.Betting || playerBet < minBet) return;
-		splitHandIndicator.SetActive(false);
 		gameState = GameState.Playing;
+
+		// Deal cards
 		cardManager.Shuffle();
-		cardManager.Deal(2, true, playerHand, dealerHand);
+		if (debugMode)
+		{
+			playerHand = playerDebugHand;
+			dealerHand = dealerDebugHand;
+		}
+		else
+		{
+			cardManager.Deal(2, true, playerHand, dealerHand);
+		}
+		dealerHand[0].isFaceUp = false;
 
+		// Clear visual hand
 		foreach (Transform card in playerHandLocation.transform) Destroy(card.gameObject);
-
-		if (playerDebugHand != null) playerHand = playerDebugHand;
-		if (dealerDebugHand != null) dealerHand = dealerDebugHand;
 
 		if (playerInfo.chipBalance < playerBet)
 		{
@@ -90,11 +99,12 @@ public class BlackjackManager : MonoBehaviour
 		{
 			splitButton.SetActive(false);
 		}
-
-		dealerHand[0].isFaceUp = false;
+		else
+		{
+			splitButton.SetActive(true);
+		}
 
 		CheckBlackjack();
-
 		DisplayCards();
 	}
 
@@ -108,7 +118,7 @@ public class BlackjackManager : MonoBehaviour
 		if (isSplitHand)
 		{
 			playerSplitBet *= 2;
-			playerSplitHand.Add(cardManager.GetCard());
+			cardManager.Deal(1, false, playerSplitHand);
 		}
 		else
 		{
