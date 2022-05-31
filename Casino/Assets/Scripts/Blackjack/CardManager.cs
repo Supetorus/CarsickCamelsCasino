@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardManager : MonoBehaviour
@@ -117,25 +118,26 @@ public class CardManager : MonoBehaviour
     {
 		PokerHandValue handValue;
 
-
+		var valueSort = hand.OrderBy(c => c.value).ToList();
+		var suitSort = hand.OrderBy(c => c.suit).ToList();
 
 		// if royal flush
-		if (hand.Exists(c => c.value == Card.eValue.ACE) && hand.Exists(c => c.value == Card.eValue.KING) && hand.Exists(c => c.value == Card.eValue.QUEEN) && hand.Exists(c => c.value == Card.eValue.JACK) && hand.Exists(c => c.value == Card.eValue.TEN) && hand.FindAll(c => c.suit == hand[0].suit).Count == 5)
+		if (valueSort[0].value == Card.eValue.ACE && valueSort[1].value == Card.eValue.TEN && valueSort[2].value == Card.eValue.JACK && valueSort[3].value == Card.eValue.QUEEN && valueSort[4].value == Card.eValue.KING && suitSort.FindAll(c => c.suit == suitSort[0].suit).Count == 5)
 			handValue = PokerHandValue.RoyalFlush;
 		// if straight flush
-		else if (false)
+		else if (StraightCalculation(valueSort) && suitSort.FindAll(c => c.suit == suitSort[0].suit).Count == 5)
 			handValue = PokerHandValue.StraightFlush;
 		// if four of kind
-		else if (hand.FindAll(c => c.value == hand[0].value).Count == 4 || hand.FindAll(c => c.value == hand[1].value).Count == 4)
+		else if (valueSort.FindAll(c => c.value == valueSort[0].value).Count == 4 || valueSort.FindAll(c => c.value == valueSort[1].value).Count == 4)
 			handValue = PokerHandValue.FourOfAKind;
 		// if full house
-		else if (false)
+		else if ((valueSort.FindAll(c => c.value == valueSort[0].value).Count == 3 && valueSort.FindAll(c => c.value == valueSort[3].value).Count == 2) || (valueSort.FindAll(c => c.value == valueSort[0].value).Count == 2 && valueSort.FindAll(c => c.value == valueSort[2].value).Count == 3))
 			handValue = PokerHandValue.FullHouse;
 		// if flush
 		else if (hand.FindAll(c => c.suit == hand[0].suit).Count == 5) 
 			handValue = PokerHandValue.Flush;
 		// if straight
-		else if (false)
+		else if (StraightCalculation(valueSort))
 			handValue = PokerHandValue.Straight;
 		// if three of kind
 		else if (hand.FindAll(c => c.value == hand[0].value).Count == 3 || hand.FindAll(c => c.value == hand[1].value).Count == 3 || hand.FindAll(c => c.value == hand[2].value).Count == 3)
@@ -144,7 +146,7 @@ public class CardManager : MonoBehaviour
 		else if (false)
 			handValue = PokerHandValue.TwoPair;
 		// if pair
-		else if (false)
+		else if (hand.FindAll(c => c.value == hand[0].value).Count == 2 || hand.FindAll(c => c.value == hand[1].value).Count == 2 || hand.FindAll(c => c.value == hand[2].value).Count == 2 || hand.FindAll(c => c.value == hand[3].value).Count == 2)
 			handValue = PokerHandValue.Pair;
 		// else
 		else
@@ -152,6 +154,16 @@ public class CardManager : MonoBehaviour
 
 		return (int)handValue;
 	}
+
+	private bool StraightCalculation(List<Card> sortedList)
+    {
+        for (int i = 0; i < sortedList.Count - 1; i++)
+        {
+			if (sortedList[i].value != sortedList[i + 1].value - 1) return false;
+        }
+
+		return true;
+    }
 
 	/// <summary>
 	/// Resets the deck to a fresh full randomized deck from the cards list.
