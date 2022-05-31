@@ -143,7 +143,7 @@ public class CardManager : MonoBehaviour
 		else if (hand.FindAll(c => c.value == hand[0].value).Count == 3 || hand.FindAll(c => c.value == hand[1].value).Count == 3 || hand.FindAll(c => c.value == hand[2].value).Count == 3)
 			handValue = PokerHandValue.ThreeOfAKind;
 		// if two pair
-		else if (false)
+		else if ((valueSort.FindAll(c => c.value == hand[0].value).Count == 2 && valueSort.FindAll(c => c.value == hand[2].value).Count == 2) || (valueSort.FindAll(c => c.value == hand[0].value).Count == 2 && valueSort.FindAll(c => c.value == hand[3].value).Count == 2) || (valueSort.FindAll(c => c.value == hand[1].value).Count == 2 && valueSort.FindAll(c => c.value == hand[3].value).Count == 2))
 			handValue = PokerHandValue.TwoPair;
 		// if pair
 		else if (hand.FindAll(c => c.value == hand[0].value).Count == 2 || hand.FindAll(c => c.value == hand[1].value).Count == 2 || hand.FindAll(c => c.value == hand[2].value).Count == 2 || hand.FindAll(c => c.value == hand[3].value).Count == 2)
