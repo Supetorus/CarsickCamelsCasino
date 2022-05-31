@@ -198,4 +198,13 @@ public class PokerLogic : MonoBehaviour
             DisplayMoney();
         }
     }
+
+    public void SubtractBet(int bet)
+    {
+        if (gameState != GameState.Betting || playerInfo.chipBalance < bet) return;
+
+        playerBet -= bet;
+        playerInfo.chipBalance += bet;
+        DisplayMoney();
+    }
 }

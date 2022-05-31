@@ -10,6 +10,7 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     [SerializeField] PlayerInfo playerInfo;
     [SerializeField] GameObject parent;
     [SerializeField] bool respawn = true;
+    [SerializeField] PokerLogic logic;
     
     private Vector2 dragOffset;
     private CanvasGroup canvasGroup;
@@ -46,6 +47,7 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         if (!valueAdded)
         {
+            logic.AddBet(betValue);
             playerInfo.chipBalance -= betValue;
             valueAdded = true;
         }
