@@ -2255,7 +2255,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1333986457}
-  - component: {fileID: 1333986456}
   - component: {fileID: 1333986458}
   m_Layer: 0
   m_Name: Poker
@@ -2264,19 +2263,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1333986456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1333986455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad5dd2527b2b3d94baae9a1a65ccbe86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cards: []
 --- !u!4 &1333986457
 Transform:
   m_ObjectHideFlags: 0
@@ -2304,7 +2290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d60a3c3b628888489a99f24958bbffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardManager: {fileID: 1333986456}
+  cardManager: {fileID: 0}
   playerInfo: {fileID: 11400000, guid: b8486626d6fa3504f83fbc2ff34ffba6, type: 2}
   playerDebugHand: []
   playerAvailableChips: {fileID: 1940414127}

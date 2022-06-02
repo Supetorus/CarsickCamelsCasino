@@ -52,8 +52,8 @@ public class PokerLogic : MonoBehaviour
         cardManager.Deal(5, true, playerHand);
 
         foreach (Transform card in playerHandLocation.transform) Destroy(card.gameObject);
-
-        if (playerDebugHand != null) playerHand = playerDebugHand;
+        List<Card> debugHang = playerHand;
+        //if (playerDebugHand != null) playerHand = playerDebugHand;
 
         DisplayCards();
     }
