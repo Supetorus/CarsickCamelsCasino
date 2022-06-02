@@ -52,8 +52,7 @@ public class PokerLogic : MonoBehaviour
         cardManager.Deal(5, true, playerHand);
 
         foreach (Transform card in playerHandLocation.transform) Destroy(card.gameObject);
-        List<Card> debugHang = playerHand;
-        //if (playerDebugHand != null) playerHand = playerDebugHand;
+        if (playerDebugHand != null) playerHand = playerDebugHand;
 
         DisplayCards();
     }
@@ -64,9 +63,18 @@ public class PokerLogic : MonoBehaviour
     public void DisplayCards()
     {
         if (playerHand.Count < 0) return;
+        else if(playerHand.Count > 0) DoesPLayerWin();
 
+        foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
+        foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
+
+        //GameOver();
+    }
+
+    public void DoesPLayerWin()
+    {
         playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
-        if(playerScore == 0)
+        if (playerScore == 0)
         {
             playerHandText.text = "No win";
         }
@@ -106,9 +114,6 @@ public class PokerLogic : MonoBehaviour
         {
             playerHandText.text = "Royal Flush";
         }
-
-        foreach (Transform c in playerHandLocation.transform) Destroy(c.gameObject);
-        foreach (Card c in playerHand) Instantiate(c.gameObject, playerHandLocation.transform);
     }
 
     public void DisplayMoney()
@@ -122,13 +127,23 @@ public class PokerLogic : MonoBehaviour
     {
         playerHand.Clear();
         playerBet = 0;
+        playerHandText.text = "No Win";
 
         DisplayCards();
-        DisplayMoney();
+        //DisplayMoney();
         gameState = GameState.Betting;
     }
 
-    private IEnumerator GameOver()
+    public void ResetButton()
+    {
+        if (gameState != GameState.FirstDraw) return;
+        else
+        {
+            GameOver();
+        }
+    }
+
+    private void GameOver()
     {
         playerScore = cardManager.CalculateHandValue(playerHand, CardManager.CardRules.Poker);
         if (playerScore == 0)
@@ -181,11 +196,9 @@ public class PokerLogic : MonoBehaviour
             playerBet = 0;
         }
 
-        DisplayCards();
+        //DisplayCards();
         DisplayMoney();
-
-        yield return new WaitForSeconds(2);
-
+        ResetGame();
     }
 
     public void AddBet(int bet)

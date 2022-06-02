@@ -48,7 +48,6 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (!valueAdded)
         {
             logic.AddBet(betValue);
-            playerInfo.chipBalance -= betValue;
             valueAdded = true;
         }
 
