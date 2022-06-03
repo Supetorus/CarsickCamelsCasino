@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerInfo
   m_EditorClassIdentifier: 
   playerName: 
-  bankBalance: 112
-  chipBalance: 23456
+  bankBalance: 100000
+  chipBalance: 363968

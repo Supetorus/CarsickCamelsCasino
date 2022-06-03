@@ -11,6 +11,7 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     [SerializeField] GameObject parent;
     [SerializeField] bool respawn = true;
     [SerializeField] PokerLogic logic;
+    [SerializeField] string clearTag;
     
     private Vector2 dragOffset;
     private CanvasGroup canvasGroup;
@@ -51,6 +52,7 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             valueAdded = true;
         }
 
+        gameObject.tag = clearTag;
         canvasGroup.blocksRaycasts = false;
     }
 
@@ -62,5 +64,14 @@ public class DragNDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         canvasGroup.blocksRaycasts = true;
+    }
+
+    public void ClearChips()
+    {
+        GameObject[] chips = GameObject.FindGameObjectsWithTag(clearTag);
+        foreach (var chip in chips)
+        {
+            Destroy(chip);
+        }
     }
 }
